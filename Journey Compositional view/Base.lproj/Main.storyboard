@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" highlighted="YES" adjustsImageSizeForAccessibilityContentSizeCategory="YES" id="frQ-Ps-Hcx">
-                                <rect key="frame" x="-4" y="-324" width="400" height="1500"/>
+                                <rect key="frame" x="-4" y="0.0" width="400" height="852"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jSq-L3-LZx">
@@ -30,17 +30,17 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="hik-7J-oNm" customClass="LevelCollectionViewCell" customModule="Journey_Compositional_view" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="v0U-v7-huc">
-                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76b-ke-6gr" userLabel="TopView">
-                                <rect key="frame" x="0.0" y="59" width="393" height="80"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="72"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle" catalog="system" id="zEt-KC-bMG">
                                         <rect key="frame" x="325" y="18.666666666666686" width="33" height="33"/>
@@ -125,17 +125,18 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="O54-3o-2y4"/>
+                                    <constraint firstAttribute="height" constant="72" id="O54-3o-2y4"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <constraints>
-                            <constraint firstItem="76b-ke-6gr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3eF-Hf-5lg"/>
+                            <constraint firstItem="76b-ke-6gr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3eF-Hf-5lg"/>
                             <constraint firstItem="76b-ke-6gr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="3sj-gy-mOf"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="76b-ke-6gr" secondAttribute="bottom" constant="679" id="Bii-dn-3Y2"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="76b-ke-6gr" secondAttribute="baseline" constant="687" id="Bii-dn-3Y2"/>
                             <constraint firstItem="jSq-L3-LZx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="EvI-ch-NjP"/>
                             <constraint firstAttribute="bottom" secondItem="jSq-L3-LZx" secondAttribute="bottom" id="Il7-bY-DiG"/>
+                            <constraint firstAttribute="bottom" secondItem="frQ-Ps-Hcx" secondAttribute="bottom" id="LC0-1q-eZd"/>
                             <constraint firstItem="jSq-L3-LZx" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cJn-xb-4jk"/>
                             <constraint firstAttribute="trailing" secondItem="76b-ke-6gr" secondAttribute="trailing" id="g98-3w-aX6"/>
                             <constraint firstItem="jSq-L3-LZx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="852" id="p3S-aC-CkZ"/>

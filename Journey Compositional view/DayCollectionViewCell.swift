@@ -12,6 +12,7 @@ class DayCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var dayLabel: UILabel!
     
+    @IBOutlet var levelLabel: UILabel!
     
     @IBOutlet var exerciseNode1: UIView!
     
