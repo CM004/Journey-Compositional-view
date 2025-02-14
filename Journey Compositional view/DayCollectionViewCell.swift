@@ -7,6 +7,11 @@
 
 import UIKit
 
+// Add this protocol at the top of the file
+protocol DayCollectionViewCellDelegate: AnyObject {
+    func didTapExerciseNode(_ node: Int, in cell: DayCollectionViewCell)
+}
+
 class DayCollectionViewCell: UICollectionViewCell {
     
     
@@ -24,27 +29,28 @@ class DayCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var exerciseNode4: UIView!
     
-
+    weak var delegate: DayCollectionViewCellDelegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        addTapGestureToNode(exerciseNode1, action: #selector(exerciseNodeTapped(_:)))
-                addTapGestureToNode(exerciseNode2, action: #selector(exerciseNodeTapped(_:)))
-                addTapGestureToNode(exerciseNode3, action: #selector(exerciseNodeTapped(_:)))
-                addTapGestureToNode(exerciseNode4, action: #selector(exerciseNodeTapped(_:)))
-            }
-    private func addTapGestureToNode(_ node: UIView, action: Selector) {
-            let tapGesture = UITapGestureRecognizer(target: self, action: action)
-            node.addGestureRecognizer(tapGesture)
-            node.isUserInteractionEnabled = true
-        }
+        setupNodeInteractions()
+    }
+    
+    private func setupNodeInteractions() {
+        let nodes = [exerciseNode1, exerciseNode2, exerciseNode3, exerciseNode4]
         
-        @objc private func exerciseNodeTapped(_ sender: UITapGestureRecognizer) {
-            guard let tappedNode = sender.view else { return }
-            print("Tapped on exercise node: \(tappedNode)")
-            
-            // Optionally, you can trigger a delegate or closure here to communicate with the ViewController
+        for (index, node) in nodes.enumerated() {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(nodeTapped(_:)))
+            node?.tag = index + 1
+            node?.addGestureRecognizer(tapGesture)
+            node?.isUserInteractionEnabled = true
         }
     }
+    
+    @objc private func nodeTapped(_ sender: UITapGestureRecognizer) {
+        guard let nodeView = sender.view else { return }
+        delegate?.didTapExerciseNode(nodeView.tag, in: self)
+    }
+}
 
 
