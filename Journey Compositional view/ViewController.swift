@@ -8,6 +8,22 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    
+    
+    
+    
+    
+    
+    
+    var exercisesCompleted = 0
+    var streakCount = 0
+    
+    
+    
+    
+    
+    
     private var collectionView: UICollectionView!
     private let journeyManager = JourneyManager.shared
     private var currentLevel: Level!
@@ -86,14 +102,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     // Add these new methods
     private func setupExerciseNodeTaps(in cell: DayCollectionViewCell, forDay day: Int) {
-        // Assuming you have exercise1Node, exercise2Node, etc. as outlets in your cell
         let exerciseNodes = [cell.exerciseNode1, cell.exerciseNode2, cell.exerciseNode3, cell.exerciseNode4]
         
         for (index, node) in exerciseNodes.enumerated() {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(exerciseNodeTapped(_:)))
+            // Make sure the node is user interactive
             node?.isUserInteractionEnabled = true
-            node?.tag = (day * 10) + index // Unique tag for each node: day*10 + node index
+            
+            // Remove any existing gesture recognizers
+            if let existingGestures = node?.gestureRecognizers {
+                for gesture in existingGestures {
+                    node?.removeGestureRecognizer(gesture)
+                }
+            }
+            
+            // Add new tap gesture
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(exerciseNodeTapped(_:)))
+            tapGesture.cancelsTouchesInView = false
+            node?.tag = (day * 10) + index
             node?.addGestureRecognizer(tapGesture)
+            
+            // Ensure the node's subviews don't interfere with the tap
+            node?.subviews.forEach { $0.isUserInteractionEnabled = false }
         }
     }
     
@@ -102,22 +131,22 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let day = nodeView.tag / 10
         let exerciseIndex = nodeView.tag % 10
         
-        print("Tapped Day \(day), Exercise \(exerciseIndex + 1)")
+        // Only first exercise of day 1 is unlocked
+        let isLocked = !(day == 1 && exerciseIndex == 0)
         
-        // Add time required based on exercise
+        print("Tapped Day \(day), Exercise \(exerciseIndex + 1)")
         let timeRequired = getTimeRequired(for: exerciseIndex)
-        let isLocked = false // Implement your locking logic
         showExercisePopUp(forDay: day, exerciseIndex: exerciseIndex, timeRequired: timeRequired, isLocked: isLocked)
     }
     
     private func getTimeRequired(for exerciseIndex: Int) -> Int {
-        // You can customize these times based on your requirements
+        // Exercise times between 4-6 minutes
         switch exerciseIndex {
-            case 0: return 10
-            case 1: return 15
-            case 2: return 20
-            case 3: return 25
-            default: return 15
+            case 0: return 4
+            case 1: return 5
+            case 2: return 6
+            case 3: return 4
+            default: return 5
         }
     }
     
@@ -139,7 +168,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         // Background Image
         let backgroundImage = UIImageView(frame: popUpView.bounds)
-        backgroundImage.image = UIImage(named: "cardbackground")
+        backgroundImage.image = UIImage(named: "cardBackground")
         backgroundImage.contentMode = .scaleAspectFill
         backgroundImage.clipsToBounds = true
         popUpView.addSubview(backgroundImage)
@@ -165,7 +194,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         // Time Required Label
         let timeLabel = UILabel(frame: CGRect(x: 10, y: 280, width: popUpView.bounds.width - 20, height: 30))
-        timeLabel.text = "Time Required: \(timeRequired) mins"
+        timeLabel.text = "Time Required: \(timeRequired) minutes"
         timeLabel.textAlignment = .center
         timeLabel.font = UIFont.systemFont(ofSize: 16)
         timeLabel.textColor = .darkGray
@@ -191,13 +220,24 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             continueButton.addTarget(self, action: #selector(continueToExercise(_:)), for: .touchUpInside)
             popUpView.addSubview(continueButton)
         } else {
-            let lockedLabel = UILabel(frame: CGRect(x: 10, y: 315, width: popUpView.bounds.width - 20, height: 40))
-            lockedLabel.text = "Please complete previous exercises first."
+            // Single locked message
+            let lockedLabel = UILabel(frame: CGRect(x: 10, y: 345, width: popUpView.bounds.width - 20, height: 40))
+            lockedLabel.text = "Finish previous exercise to Unlock."
             lockedLabel.textAlignment = .center
             lockedLabel.textColor = .red
             lockedLabel.font = UIFont.systemFont(ofSize: 14)
             popUpView.addSubview(lockedLabel)
         }
+        
+        // Locked Status Label (for locked exercises)
+//        if isLocked {
+//            let lockedLabel = UILabel(frame: CGRect(x: 10, y: 315, width: popUpView.bounds.width - 20, height: 40))
+//            lockedLabel.text = "This exercise is locked."
+//            lockedLabel.textAlignment = .center
+//            lockedLabel.textColor = .red
+//            lockedLabel.font = UIFont.systemFont(ofSize: 14)
+//            popUpView.addSubview(lockedLabel)
+//        }
         
         // Dismiss Button
         let dismissButton = UIButton(type: .system)

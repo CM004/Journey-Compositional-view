@@ -12,6 +12,9 @@ import Foundation
 struct Exercise {
     let name: String
     let nodeImage: String
+    let timeRequired: Int
+    let description: String
+    let isLocked: Bool
 }
 
 struct Day {
