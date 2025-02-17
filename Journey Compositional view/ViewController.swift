@@ -48,6 +48,7 @@ class ViewController: UIViewController {
         currentLevel = journeyManager.getJourney().levels[0]
         setupCollectionView()
         updateLabels()
+        resetAppState()
     }
     
     private func setupCollectionView() {
@@ -121,19 +122,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let exerciseNodes = [cell.exerciseNode1, cell.exerciseNode2, cell.exerciseNode3, cell.exerciseNode4]
         
         for (index, node) in exerciseNodes.enumerated() {
-            // Make sure the node is user interactive
+            // Clear existing images first
+            //node?.subviews.forEach { $0.removeFromSuperview() }
+            
             node?.isUserInteractionEnabled = true
             
-            // Set image for day 1, exercise 1 only
-            if day == 1 && index == 0 {
+            // Calculate if this exercise should be unlocked
+            let totalExercisesInDay = 4
+            let previousDayExercises = (day - 1) * totalExercisesInDay
+            let currentDayProgress = index
+            let totalProgress = previousDayExercises + currentDayProgress
+            
+            // Set image for unlocked exercises
+            if totalProgress <= exercisesCompleted {
                 let imageView = UIImageView(frame: node?.bounds ?? .zero)
-                imageView.image = UIImage(named: "exerciseImage1")
+                imageView.image = UIImage(named: "exerciseImage\((index % 4) + 1)")
                 imageView.contentMode = .scaleAspectFit
                 imageView.frame = CGRect(x: 25, y: 25, width: (node?.bounds.width ?? 0) - 50, height: (node?.bounds.height ?? 0) - 50)
                 node?.addSubview(imageView)
             }
             
-            // Rest of the existing code remains unchanged
+            // Rest of the code remains unchanged...
             if let existingGestures = node?.gestureRecognizers {
                 for gesture in existingGestures {
                     node?.removeGestureRecognizer(gesture)
@@ -154,8 +163,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let day = nodeView.tag / 10
         let exerciseIndex = nodeView.tag % 10
         
-        // Only first exercise of day 1 is unlocked
-        let isLocked = !(day == 1 && exerciseIndex == 0)
+        let totalExercisesInDay = 4
+        let previousDayExercises = (day - 1) * totalExercisesInDay
+        let currentDayProgress = exerciseIndex
+        let totalProgress = previousDayExercises + currentDayProgress
+        
+        // Exercise is unlocked if it's the next one to be completed
+        let isLocked = !(totalProgress <= exercisesCompleted)
         
         print("Tapped Day \(day), Exercise \(exerciseIndex + 1)")
         let timeRequired = getTimeRequired(for: exerciseIndex)
@@ -289,11 +303,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let exerciseIndex = sender.tag % 10
         print("Continue to Day \(day), Exercise \(exerciseIndex + 1)")
         dismissPopUp()
-        // Add your navigation logic here
         
-        exercisesCompleted += 1
-        updateStreaks()
-        updateLabels()
+        let totalExercisesInDay = 4
+        let previousDayExercises = (day - 1) * totalExercisesInDay
+        let currentDayProgress = exerciseIndex
+        let totalProgress = previousDayExercises + currentDayProgress
+        
+        if totalProgress == exercisesCompleted {
+            exercisesCompleted += 1
+            updateStreaks()
+            updateLabels()
+            collectionView.reloadData()
+        }
     }
     private func updateLabels() {
             trophiesLabel.text = "\(exercisesCompleted)"
@@ -314,5 +335,22 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             
             lastExercisedate = currentDate
         }
+    
+//MARK: - RESET APP STATE
+private func resetAppState() {
+        // Clear UserDefaults
+        UserDefaults.standard.removeObject(forKey: "exercisesCompleted")
+        UserDefaults.standard.removeObject(forKey: "streakCount")
+        UserDefaults.standard.removeObject(forKey: "lastExerciseDate")
+        
+        // Reset properties
+        exercisesCompleted = 0
+        streakCount = 0
+        lastExercisedate = nil
+        
+        // Update UI
+        updateLabels()
+        collectionView.reloadData()
+    }
 }
 

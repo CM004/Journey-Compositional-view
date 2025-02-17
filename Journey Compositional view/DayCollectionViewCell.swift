@@ -9,17 +9,12 @@ import UIKit
 
 // Add this protocol at the top of the file
 protocol DayCollectionViewCellDelegate: AnyObject {
+    
     func didTapExerciseNode(_ node: Int, in cell: DayCollectionViewCell)
 }
 
 class DayCollectionViewCell: UICollectionViewCell {
-    
-    
-    
-    
-    
-    
-    
+ 
     @IBOutlet var dayLabel: UILabel!
     
     @IBOutlet var levelLabel: UILabel!
