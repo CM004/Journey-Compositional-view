@@ -124,20 +124,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             // Make sure the node is user interactive
             node?.isUserInteractionEnabled = true
             
-            // Remove any existing gesture recognizers
+            // Set image for day 1, exercise 1 only
+            if day == 1 && index == 0 {
+                let imageView = UIImageView(frame: node?.bounds ?? .zero)
+                imageView.image = UIImage(named: "exerciseImage1")
+                imageView.contentMode = .scaleAspectFit
+                imageView.frame = CGRect(x: 25, y: 25, width: (node?.bounds.width ?? 0) - 50, height: (node?.bounds.height ?? 0) - 50)
+                node?.addSubview(imageView)
+            }
+            
+            // Rest of the existing code remains unchanged
             if let existingGestures = node?.gestureRecognizers {
                 for gesture in existingGestures {
                     node?.removeGestureRecognizer(gesture)
                 }
             }
             
-            // Add new tap gesture
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(exerciseNodeTapped(_:)))
             tapGesture.cancelsTouchesInView = false
             node?.tag = (day * 10) + index
             node?.addGestureRecognizer(tapGesture)
             
-            // Ensure the node's subviews don't interfere with the tap
             node?.subviews.forEach { $0.isUserInteractionEnabled = false }
         }
     }
@@ -196,9 +203,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             width: 200,  // Increased width
             height: 180  // Increased height
         ))
-        exerciseImage.image = UIImage(named: "exerciseImage\(exerciseIndex + 1)")
+        exerciseImage.image = UIImage(named: "popUp\(exerciseIndex + 1)")
         exerciseImage.contentMode = .scaleAspectFit
         exerciseImage.clipsToBounds = true
+        exerciseImage.layer.magnificationFilter = CALayerContentsFilter.linear  // Prevents blurry scaling
+        exerciseImage.layer.minificationFilter = .nearest
         popUpView.addSubview(exerciseImage)
         
         // Exercise Label - Adjusted position to accommodate new image size
