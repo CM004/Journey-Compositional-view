@@ -143,6 +143,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="W6M-f5-1TP"/>
+                    <connections>
+                        <outlet property="profileButton" destination="zEt-KC-bMG" id="m3I-cj-KIm"/>
+                        <outlet property="streaksLabel" destination="QOp-ND-bXH" id="mMX-Ma-QnH"/>
+                        <outlet property="trophiesLabel" destination="CjQ-x6-d2U" id="j4s-fv-uz9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

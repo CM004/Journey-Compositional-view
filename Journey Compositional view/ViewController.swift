@@ -8,30 +8,46 @@
 import UIKit
 
 class ViewController: UIViewController {
+    // Properties
+    var exercisesCompleted = 0 {
+        didSet {
+            UserDefaults.standard.set(exercisesCompleted, forKey: "exercisesCompleted")
+        }
+    }
     
+    var streakCount = 0 {
+        didSet {
+            UserDefaults.standard.set(streakCount, forKey: "streakCount")
+        }
+    }
     
+    var lastExercisedate: Date? = nil {
+        didSet {
+            UserDefaults.standard.set(lastExercisedate, forKey: "lastExerciseDate")
+        }
+    }
     
+    // Outlets
+    @IBOutlet var profileButton: UIImageView!
+    @IBOutlet var streaksLabel: UILabel!
+    @IBOutlet var trophiesLabel: UILabel!
     
-    
-    
-    
-    
-    var exercisesCompleted = 0
-    var streakCount = 0
-    
-    
-    
-    
-    
-    
+    // Private properties
     private var collectionView: UICollectionView!
     private let journeyManager = JourneyManager.shared
     private var currentLevel: Level!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Load saved values
+        exercisesCompleted = UserDefaults.standard.integer(forKey: "exercisesCompleted")
+        streakCount = UserDefaults.standard.integer(forKey: "streakCount")
+        lastExercisedate = UserDefaults.standard.object(forKey: "lastExerciseDate") as? Date
+        
         currentLevel = journeyManager.getJourney().levels[0]
         setupCollectionView()
+        updateLabels()
     }
     
     private func setupCollectionView() {
@@ -175,17 +191,19 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         // Exercise Image
         let exerciseImage = UIImageView(frame: CGRect(
-            x: (popUpView.bounds.width - 153) / 2,
-            y: (popUpView.bounds.height - 124) / 2 - 70,
-            width: 153,
-            height: 124
+            x: (popUpView.bounds.width - 200) / 2,  // Adjusted width for better visibility
+            y: 40,  // Position from top
+            width: 200,  // Increased width
+            height: 180  // Increased height
         ))
-        exerciseImage.image = UIImage(named: "exercise\(exerciseIndex + 1)")
+        exerciseImage.image = UIImage(named: "exerciseImage\(exerciseIndex + 1)")
         exerciseImage.contentMode = .scaleAspectFit
+        exerciseImage.clipsToBounds = true
         popUpView.addSubview(exerciseImage)
         
-        // Exercise Label
+        // Exercise Label - Adjusted position to accommodate new image size
         let exerciseLabel = UILabel(frame: CGRect(x: 10, y: 240, width: popUpView.bounds.width - 20, height: 30))
+        
         exerciseLabel.text = "Exercise \(exerciseIndex + 1)"
         exerciseLabel.textAlignment = .center
         exerciseLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -263,6 +281,29 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         print("Continue to Day \(day), Exercise \(exerciseIndex + 1)")
         dismissPopUp()
         // Add your navigation logic here
+        
+        exercisesCompleted += 1
+        updateStreaks()
+        updateLabels()
     }
+    private func updateLabels() {
+            trophiesLabel.text = "\(exercisesCompleted)"
+            streaksLabel.text = "\(streakCount)"
+        }
+    private func updateStreaks() {
+            let currentDate = Calendar.current.startOfDay(for: Date())
+            
+            if let lastDate = lastExercisedate {
+                if Calendar.current.isDateInYesterday(lastDate) {
+                    streakCount += 1
+                } else if !Calendar.current.isDateInToday(lastDate) {
+                    streakCount = 1 // Reset streak if a day is missed
+                }
+            } else {
+                streakCount = 1 // First day of exercise
+            }
+            
+            lastExercisedate = currentDate
+        }
 }
 

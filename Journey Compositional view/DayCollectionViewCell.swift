@@ -15,6 +15,11 @@ protocol DayCollectionViewCellDelegate: AnyObject {
 class DayCollectionViewCell: UICollectionViewCell {
     
     
+    
+    
+    
+    
+    
     @IBOutlet var dayLabel: UILabel!
     
     @IBOutlet var levelLabel: UILabel!
@@ -23,9 +28,7 @@ class DayCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var exerciseNode2: UIView!
     
-    
     @IBOutlet var exerciseNode3: UIView!
-    
     
     @IBOutlet var exerciseNode4: UIView!
     
